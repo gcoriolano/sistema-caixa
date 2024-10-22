@@ -83,7 +83,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
     printf("Quantos itens deseja vender?"); // Questiona quantos itens serão vendidos.
     scanf("%d", &contagem_itens);
 
-    printf("Insira o código, a quantidade e o peso total que foi dado em ordem, no formato: Código1 | Quantidade1 | Peso1, apertando ENTER para separar.\n");
+    printf("Insira o codigo, a quantidade e o peso total que foi dado em ordem, no formato: Codigo1 | Quantidade1 | Peso1, apertando ENTER para separar.\n");
     for (int i = 0; i < contagem_itens; i++) { // Enquanto não houver atingido a contagem de itens à serem vendidos, continua rodando.
         scanf("%d %d %f", &codigo[i], &quantidade[i], &kg);
     }
@@ -97,7 +97,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
                     float subtotal = kg * produtos[j].precoKG; // É feito o cálculo do valor total do produto em KG.
                     total += subtotal;
                     produtos[j].quantidade -= quantidade[i]; // Atualiza a quantidade em estoque
-                    printf("Produto: %s, Quantidade: %d, Peso: %.2fKG, Preço KG: %.2f, Subtotal: %.2f\n",
+                    printf("Produto: %s, Quantidade: %d, Peso: %.2fKG, Preco KG: %.2f, Subtotal: %.2f\n",
                            produtos[j].nome, quantidade[i], kg, produtos[j].precoKG, subtotal); 
                 } else {
                     printf("Quantidade solicitada de %s é maior que a disponivel.\n", produtos[j].nome); // Se a quantidade de itens solicitada for maior que a que estiver no estoque, avisar ao usuário.
@@ -107,7 +107,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
             }
         }
         if (!encontrado) {
-            printf("Codigo %d não encontrado.\n", codigo[i]); // Se o código inserido não existir no estoque, avisa ao usuário que o código não foi encontrado.
+            printf("Codigo %d nao encontrado.\n", codigo[i]); // Se o código inserido não existir no estoque, avisa ao usuário que o código não foi encontrado.
         }
     } 
 
@@ -193,7 +193,7 @@ void adicionar_produto() {
 
 void remover_produto() {
     int codigo;
-    printf("Código do produto a ser removido: "); // Caso um produto precise ser removido do estoque, temos essa função.
+    printf("Codigo do produto a ser removido: "); // Caso um produto precise ser removido do estoque, temos essa função.
     scanf("%d", &codigo); 
 
     for (int i = 0; i < contagem_produtos; i++) { // Um loop usado para verificar tudo que há dentro dos vetores "produtos", até que se encontre o código do produto à se remover.
@@ -207,7 +207,7 @@ void remover_produto() {
         }
     }
 
-    printf("Produto não encontrado!\n"); // Se o código do produto não for encontrado, é avisado ao usuário.
+    printf("Produto nao encontrado!\n"); // Se o código do produto não for encontrado, é avisado ao usuário.
 }
 
 void lista_produtos() {
@@ -218,6 +218,6 @@ void lista_produtos() {
 
     printf("\nLista de Produtos:\n");
     for (int i = 0; i < contagem_produtos; i++) {
-        printf("Nome: %s, Codigo: %d, Preço KG: %.2f, Quantidade: %d\n", produtos[i].nome, produtos[i].codigo, produtos[i].precoKG, produtos[i].quantidade);
+        printf("Nome: %s, Codigo: %d, Preco KG: %.2f, Quantidade: %d\n", produtos[i].nome, produtos[i].codigo, produtos[i].precoKG, produtos[i].quantidade);
     } // Aqui todas as características dos produtos em estoque são detalhadas ao usuário.
 }
