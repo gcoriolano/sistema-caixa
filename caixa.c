@@ -83,7 +83,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
         return;
     }
 
-    printf("Quantos itens deseja vender?"); // Questiona quantos itens serão vendidos.
+    printf("Quantos itens deseja vender?\n"); // Questiona quantos itens serão vendidos.
     scanf("%d", &contagem_itens);
 
     printf("Em ordem, insira o codigo, a quantidade e o peso de cada item.\n");
