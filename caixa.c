@@ -16,8 +16,10 @@ typedef struct { // Typedef struct é usado para abrangir diversas variáveis em
 typedef struct {
     char nome[30];
     float precoKG;
+    float preco;
     int quantidade; // Define variáveis de produto, como nome, preço, quantidade e código de idenitficação.
     int codigo;
+    int op;
 } Produto;
 
 User users[MAX_USERS] = {
@@ -84,22 +86,36 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
     printf("Quantos itens deseja vender?"); // Questiona quantos itens serão vendidos.
     scanf("%d", &contagem_itens);
 
-    printf("Insira o codigo, a quantidade e o peso total que foi dado em ordem, no formato: Codigo1 | Quantidade1 | Peso1, apertando ENTER para separar.\n");
+    printf("Em ordem, insira o codigo, a quantidade e o peso de cada item.\n");
+    printf("Exemplo: Codigo1 | Quantidade1 | Peso1, [Enter], Codigo2 | Quantidade 2 | Peso2...\n");
+    printf("OBS: Se o item for vendido em valor unitario, coloque peso como 0.\n");
     for (int i = 0; i < contagem_itens; i++) { // Enquanto não houver atingido a contagem de itens à serem vendidos, continua rodando.
-        scanf("%d %d %f", &codigo[i], &quantidade[i], &kg[i]);
+       scanf("%d %d %f", &codigo[i], &quantidade[i], &kg[i]);
     }
+
+// scanf("%d %d %f", &codigo[i], &quantidade[i], &kg[i]);
 
     printf("Resumo da venda:\n");
     for (int i = 0; i < contagem_itens; i++) { // Assim como no loop anterior, o código só para após todos os itens terem sido processados.
         int encontrado = 0;
         for (int j = 0; j < contagem_produtos; j++) {
+            
             if (produtos[j].codigo == codigo[i]) {
                 if (quantidade[i] <= produtos[j].quantidade) {
+                    float subtotalu = quantidade[i] * produtos[j].preco;
+                    total += subtotalu;
+                    if (kg[i] == 0 ) {
+                        produtos[j].quantidade -= quantidade[i];
+                        printf("Produto: %s, Quantidade: %d, Preco Unidade: %.2f, Subtotal: %.2f\n",
+                        produtos[j].nome, quantidade[i], produtos[j].preco, subtotalu);
+                    } else {
                     float subtotal = kg[i] * produtos[j].precoKG; // É feito o cálculo do valor total do produto em KG.
                     total += subtotal;
+                    
                     produtos[j].quantidade -= quantidade[i]; // Atualiza a quantidade em estoque
                     printf("Produto: %s, Quantidade: %d, Peso: %.2fKG, Preco KG: %.2f, Subtotal: %.2f\n",
                            produtos[j].nome, quantidade[i], kg[i], produtos[j].precoKG, subtotal);
+                    }
                 } else {
                     printf("Quantidade solicitada de %s é maior que a disponivel.\n", produtos[j].nome); // Se a quantidade de itens solicitada for maior que a que estiver no estoque, avisar ao usuário.
                 }
@@ -159,18 +175,32 @@ void logout() {
 }
 
 void adicionar_produto() {
+    int op;
+    op = 0;
+
     if (contagem_produtos >= MAX_PRODUCTS) { // Nosso estoque possui um espaço limitado de 100 itens, definido na constante no início do código.
         printf("Limite de produtos atingido!\n");
         return;
     }
 
     Produto p; // A typedef "produto" nos permite que seja inserido diversas variáveis numa só estrutura. Assim, podemos definir as características de um produto.
+    printf("Voce deseja adicionar um produto com valor unitario, ou com valor em KG?\n");
+    printf("Escolha 1 para em KG | Escolha 2 para valor unitario\n");
+    scanf("%d", &op);
+    if (op == 1) {
     printf("Nome do produto: ");
     scanf("%s", p.nome);
     printf("Preco do produto em KG: ");
     scanf("%f", &p.precoKG);
     printf("Quantidade do produto: ");
-    scanf("%d", &p.quantidade);
+    scanf("%d", &p.quantidade); } else {
+    printf("Nome do produto: ");
+    scanf("%s", p.nome);
+    printf("Preco do produto em UNIDADE: ");
+    scanf("%f", &p.preco);
+    printf("Quantidade do produto: ");
+    scanf("%d", &p.quantidade);       
+    }
 
     if (p.quantidade <= 0) {
         printf("A quantidade deve ser maior que zero!\n"); // Não tem como colocar 0 produtos no estoque.
@@ -219,6 +249,11 @@ void lista_produtos() {
 
     printf("\nLista de Produtos:\n");
     for (int i = 0; i < contagem_produtos; i++) {
-        printf("Nome: %s, Codigo: %d, Preco KG: %.2f, Quantidade: %d\n", produtos[i].nome, produtos[i].codigo, produtos[i].precoKG, produtos[i].quantidade);
+        if (produtos[i].precoKG < 1) {
+            printf("Nome: %s, Codigo: %d, Preco Unidade: %.2f, Quantidade: %d\n", produtos[i].nome, produtos[i].codigo, produtos[i].preco, produtos[i].quantidade);
+        } else {
+            printf("Nome: %s, Codigo: %d, Preco KG: %.2f, Quantidade: %d\n", produtos[i].nome, produtos[i].codigo, produtos[i].precoKG, produtos[i].quantidade);
+        }
     } // Aqui todas as características dos produtos em estoque são detalhadas ao usuário.
+
 }
