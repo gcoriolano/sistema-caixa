@@ -5,9 +5,10 @@
 #define MAX_USERS 2 // Definindo constantes que não serão alteradas, como máximo de usuários, produtos e vendas.
 #define MAX_PRODUCTS 100
 #define MAX_SALES_ITEMS 100
+#define MAX_KG 1000
 
 typedef struct { // Typedef struct é usado para abrangir diversas variáveis em uma estrutura só.
-    char username[20]; 
+    char username[20];
     char password[20];
     int role; // Define o cargo e permissões de quem está uilizando, sendo 0 para operador de caixa e 1 para administrador
 } User;
@@ -32,7 +33,7 @@ int contagem_produtos = 0;
 void login();
 void caixa_menu();
 void admin_menu();
-void adicionar_produto(); 
+void adicionar_produto();
 void remover_produto();
 void lista_produtos();
 void logout();
@@ -51,7 +52,7 @@ void login() {
     scanf("%s", username);
     printf("Senha: ");
     scanf("%s", password);
-    for (i = 0; i < MAX_USERS; i++) {  
+    for (i = 0; i < MAX_USERS; i++) {
         if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) { // strcmp é usado aqui para comparar se o usuário e senha inseridos equivalem a algum usuario e senha valido.
             if (users[i].role == 0) { // Também é verificado o nível de permissão do usuário. 0 sendo o mais baixo para operador de caixa, 1 o mais alto para administrador.
                 caixa_menu();
@@ -71,12 +72,12 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
     int quantidade[MAX_SALES_ITEMS];
     float total = 0.0;
     int contagem_itens;
-    float kg;
+    float kg[MAX_KG];
 
     printf("Seja bem-vindo operador de caixa!\n");
     if (contagem_produtos == 0) { // Se a quantidade de produtos no estoque for "0", demonstra ao usuário que não há estoque.
         printf("Sem estoque!\n");
-        printf("Contatar um administrador para resolver o problema.\n"); 
+        printf("Contatar um administrador para resolver o problema.\n");
         return;
     }
 
@@ -85,7 +86,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
 
     printf("Insira o codigo, a quantidade e o peso total que foi dado em ordem, no formato: Codigo1 | Quantidade1 | Peso1, apertando ENTER para separar.\n");
     for (int i = 0; i < contagem_itens; i++) { // Enquanto não houver atingido a contagem de itens à serem vendidos, continua rodando.
-        scanf("%d %d %f", &codigo[i], &quantidade[i], &kg);
+        scanf("%d %d %f", &codigo[i], &quantidade[i], &kg[i]);
     }
 
     printf("Resumo da venda:\n");
@@ -94,11 +95,11 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
         for (int j = 0; j < contagem_produtos; j++) {
             if (produtos[j].codigo == codigo[i]) {
                 if (quantidade[i] <= produtos[j].quantidade) {
-                    float subtotal = kg * produtos[j].precoKG; // É feito o cálculo do valor total do produto em KG.
+                    float subtotal = kg[i] * produtos[j].precoKG; // É feito o cálculo do valor total do produto em KG.
                     total += subtotal;
                     produtos[j].quantidade -= quantidade[i]; // Atualiza a quantidade em estoque
                     printf("Produto: %s, Quantidade: %d, Peso: %.2fKG, Preco KG: %.2f, Subtotal: %.2f\n",
-                           produtos[j].nome, quantidade[i], kg, produtos[j].precoKG, subtotal); 
+                           produtos[j].nome, quantidade[i], kg[i], produtos[j].precoKG, subtotal);
                 } else {
                     printf("Quantidade solicitada de %s é maior que a disponivel.\n", produtos[j].nome); // Se a quantidade de itens solicitada for maior que a que estiver no estoque, avisar ao usuário.
                 }
@@ -109,10 +110,10 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
         if (!encontrado) {
             printf("Codigo %d nao encontrado.\n", codigo[i]); // Se o código inserido não existir no estoque, avisa ao usuário que o código não foi encontrado.
         }
-    } 
+    }
 
     printf("Total a pagar: %.2f\n", total);
-} 
+}
 
 void admin_menu() {
     int choice; // O menu de administrador, do qual possui mais funções, incluindo adicionar e remover produtos do estoque.
@@ -194,7 +195,7 @@ void adicionar_produto() {
 void remover_produto() {
     int codigo;
     printf("Codigo do produto a ser removido: "); // Caso um produto precise ser removido do estoque, temos essa função.
-    scanf("%d", &codigo); 
+    scanf("%d", &codigo);
 
     for (int i = 0; i < contagem_produtos; i++) { // Um loop usado para verificar tudo que há dentro dos vetores "produtos", até que se encontre o código do produto à se remover.
         if (produtos[i].codigo == codigo) { // Encontrado o código,
