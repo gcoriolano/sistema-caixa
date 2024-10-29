@@ -6,6 +6,7 @@
 #define MAX_PRODUCTS 100
 #define MAX_SALES_ITEMS 100
 #define MAX_KG 1000
+#define clrscr() printf("\e[1;1H\e[2J") // Função constante que serve para limpar o console.
 
 typedef struct { // Typedef struct é usado para abrangir diversas variáveis em uma estrutura só.
     char username[20];
@@ -77,7 +78,8 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
     float total = 0.0;
     int contagem_itens;
     float kg[MAX_KG];
-
+    char continuar = 's';
+    clrscr();
     printf("Seja bem-vindo operador de caixa!\n");
 
     lista_produtos();
@@ -86,22 +88,24 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
         printf("Sem estoque!\n");
         printf("Contatar um administrador para resolver o problema.\n");
         return;
-    }
+    }   
+    
+    do {
+        printf("Em ordem, insira o codigo, a quantidade e o peso do item:\n");
+        printf("Exemplo: Codigo1 | Quantidade1 | Peso1\n");
+        printf("OBS: Se o item for vendido em valor unitário, coloque peso como 0.\n");
 
-    printf("\nQuantos itens deseja vender?\n"); // Questiona quantos itens serão vendidos.
-    scanf("%d", &contagem_itens);
+        scanf("%d %d %f", &codigo[contagem_itens], &quantidade[contagem_itens], &kg[contagem_itens]);
+        contagem_itens++;
+        clrscr();
+        printf("Deseja adicionar mais um item? (s/n): "); // Prompt de usuário, o código só para de adicionar itens quando o usuário não quiser mais.
+        scanf(" %c", &continuar);
+        clrscr();
+        } while (continuar == 's' || continuar == 'S');
 
-    printf("Em ordem, insira o codigo, a quantidade e o peso de cada item.\n");
-    printf("Exemplo: Codigo1 | Quantidade1 | Peso1, [Enter], Codigo2 | Quantidade 2 | Peso2...\n");
-    printf("OBS: Se o item for vendido em valor unitario, coloque peso como 0.\n");
-    for (int i = 0; i < contagem_itens; i++) { // Enquanto não houver atingido a contagem de itens à serem vendidos, continua rodando.
-       scanf("%d %d %f", &codigo[i], &quantidade[i], &kg[i]);
-    }
-
-// scanf("%d %d %f", &codigo[i], &quantidade[i], &kg[i]);
 
     printf("Resumo da venda:\n");
-    for (int i = 0; i < contagem_itens; i++) { // Assim como no loop anterior, o código só para após todos os itens terem sido processados.
+    for (int i = 0; i < contagem_itens; i++) { // O código só para após todos os itens terem sido processados.
         int encontrado = 0;
         for (int j = 0; j < contagem_produtos; j++) {
             
@@ -122,6 +126,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
                            produtos[j].nome, quantidade[i], kg[i], produtos[j].precoKG, subtotal);
                     }
                 } else {
+                            clrscr();
                     printf("Quantidade solicitada de %s é maior que a disponivel.\n", produtos[j].nome); // Se a quantidade de itens solicitada for maior que a que estiver no estoque, avisar ao usuário.
                 }
                 encontrado = 1;
@@ -129,6 +134,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
             }
         }
         if (!encontrado) {
+                    clrscr();
             printf("Codigo %d nao encontrado.\n", codigo[i]); // Se o código inserido não existir no estoque, avisa ao usuário que o código não foi encontrado.
         }
     }
@@ -138,6 +144,7 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
 
 void admin_menu() {
     int choice; // O menu de administrador, do qual possui mais funções, incluindo adicionar e remover produtos do estoque.
+            clrscr();
     do {
         printf("\nMenu do Administrador:\n");
         printf("1. Adicionar Produto\n");
@@ -151,30 +158,38 @@ void admin_menu() {
 
         switch (choice) { // Dependendo da escolha do administrador, diferentes funções são chamadas para execução.
             case 1:
+                    clrscr();
                 adicionar_produto();
                 break;
             case 2:
+                    clrscr();
                 remover_produto();
                 break;
             case 3:
+                    clrscr();
                 lista_produtos();
                 break;
             case 4:
+                    clrscr();
                 caixa_menu();
                 break;
             case 5:
+                    clrscr();
                 logout();
                 return; // Retorna para o menu de login
             case 0:
+                    clrscr();
                 printf("Saindo...\n");
                 break;
             default:
+                    clrscr();
                 printf("Opcao invalida!\n");
         }
     } while (choice != 0);
 }
 
 void logout() {
+            clrscr();
     printf("Deslogado com sucesso!\n");
     login(); // Volta para a tela de login
 }
@@ -182,7 +197,7 @@ void logout() {
 void adicionar_produto() {
     int op;
     op = 0;
-
+        clrscr();
     if (contagem_produtos >= MAX_PRODUCTS) { // Nosso estoque possui um espaço limitado de 100 itens, definido na constante no início do código.
         printf("Limite de produtos atingido!\n");
         return;
@@ -193,42 +208,52 @@ void adicionar_produto() {
     printf("Escolha 1 para em KG | Escolha 2 para valor unitario\n");
     scanf("%d", &op);
     if (op == 1) {
+                clrscr();
     printf("Nome do produto: ");
     scanf("%s", p.nome);
+            clrscr();
     printf("Preco do produto em KG: ");
     scanf("%f", &p.precoKG);
+            clrscr();
     printf("Quantidade do produto: ");
     scanf("%d", &p.quantidade); } else {
+                clrscr();
     printf("Nome do produto: ");
     scanf("%s", p.nome);
+            clrscr();
     printf("Preco do produto em UNIDADE: ");
     scanf("%f", &p.preco);
+            clrscr();
     printf("Quantidade do produto: ");
     scanf("%d", &p.quantidade);       
     }
 
     if (p.quantidade <= 0) {
+                clrscr();
         printf("A quantidade deve ser maior que zero!\n"); // Não tem como colocar 0 produtos no estoque.
         return;
     }
-
+        clrscr();
     printf("Codigo do produto: ");
     scanf("%d", &p.codigo);
 
     // Verifica se o código já existe
     for (int i = 0; i < contagem_produtos; i++) {
         if (produtos[i].codigo == p.codigo) {
+                    clrscr();
             printf("Erro: Codigo %d ja existe. Nao e possivel adicionar o produto.\n", p.codigo);
             return;
         }
     }
 
     produtos[contagem_produtos++] = p;
+            clrscr();
     printf("Produto adicionado com sucesso!\n"); // Se nada tiver dado problema, o produto foi adicionado com sucesso.
 }
 
 void remover_produto() {
     int codigo;
+            clrscr();
     printf("Codigo do produto a ser removido: "); // Caso um produto precise ser removido do estoque, temos essa função.
     scanf("%d", &codigo);
 
@@ -238,20 +263,22 @@ void remover_produto() {
                 produtos[j] = produtos[j + 1];
             }
             contagem_produtos--; // e enfim, o produto é removido do estoque.
+                    clrscr();
             printf("Produto removido com sucesso!\n");
             return;
         }
     }
-
+        clrscr();
     printf("Produto nao encontrado!\n"); // Se o código do produto não for encontrado, é avisado ao usuário.
 }
 
 void lista_produtos() {
     if (contagem_produtos == 0) {
+                clrscr();
         printf("Nenhum produto cadastrado!\n"); // Se não houver produtos no estoque, é avisado ao usuário.
         return;
     }
-
+        clrscr();
     printf("\nLista de Produtos:\n");
     for (int i = 0; i < contagem_produtos; i++) {
         if (produtos[i].precoKG < 1) {
@@ -264,7 +291,8 @@ void lista_produtos() {
 }
 
 void estoque() {
-
+// Função feita para adicionar itens no estoque assim que o programa inicializar.
+// Substituição para a ausência de um banco de dados, itens armazenados no cache.
 Produto b;
 b.precoKG = 10;
 b.quantidade = 20;
