@@ -39,8 +39,10 @@ void adicionar_produto();
 void remover_produto();
 void lista_produtos();
 void logout();
+void estoque();
 
 int main() {
+    estoque();
     login(); // Função principal na abertura do programa, vai imediatamente chamar a função "login" para que seja determinado o cargo do usuário.
     return 0;
 }
@@ -77,13 +79,16 @@ void caixa_menu() { // Define o menu de permissão "caixa", logo embaixo as vari
     float kg[MAX_KG];
 
     printf("Seja bem-vindo operador de caixa!\n");
+
+    lista_produtos();
+
     if (contagem_produtos == 0) { // Se a quantidade de produtos no estoque for "0", demonstra ao usuário que não há estoque.
         printf("Sem estoque!\n");
         printf("Contatar um administrador para resolver o problema.\n");
         return;
     }
 
-    printf("Quantos itens deseja vender?\n"); // Questiona quantos itens serão vendidos.
+    printf("\nQuantos itens deseja vender?\n"); // Questiona quantos itens serão vendidos.
     scanf("%d", &contagem_itens);
 
     printf("Em ordem, insira o codigo, a quantidade e o peso de cada item.\n");
@@ -256,4 +261,21 @@ void lista_produtos() {
         }
     } // Aqui todas as características dos produtos em estoque são detalhadas ao usuário.
 
+}
+
+void estoque() {
+
+Produto b;
+b.precoKG = 10;
+b.quantidade = 20;
+b.codigo = 1;
+strcpy(b.nome, "Banana");
+produtos[contagem_produtos++] = b;
+
+Produto c;
+c.preco = 5;
+c.quantidade = 15;
+c.codigo = 2;
+strcpy(c.nome, "Alface");
+produtos[contagem_produtos++] = c;
 }
